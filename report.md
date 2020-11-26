@@ -1,10 +1,6 @@
-# Report Project Mines ML 2020
+# Report Project : Predicting Trafic volume using neural networks
 
-Authors: John Doo and Marie Curie
-
-## Recommendations
-
-- You may write this report in French
+Authors: Ilyass Seddoug
 
 ## How to write a report in markdown
 
