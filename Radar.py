@@ -137,4 +137,12 @@ def Test():
         test_loss = running_loss/len(test_loader)
         test_losses.append(test_loss.detach().cpu().numpy())
         print(f'test_loss {test_loss}')
-    
+
+
+#Do 100 epochs and see how the loss changes
+
+epochs = 100
+for epoch in range(epochs):
+    print('epochs {}/{}'.format(epoch+1,epochs))
+    Train()
+    Test()
