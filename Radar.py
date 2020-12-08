@@ -34,14 +34,14 @@ X = df_new.drop("Volume", axis = 1)
 y = df_new.Volume
 
 #take a small part of data to accelerate computation
-X = X.iloc[:50000, :]
-y = y.iloc[:50000]
+X = X.iloc[:5000, :]
+y = y.iloc[:5000]
 
 scaler = StandardScaler()
 scaler.fit(X)
 X_scaled = scaler.transform(X)
-X_train, X_test = X_scaled[:30000], X_scaled[30000:]
-y_train, y_test = y[:30000], y[30000:]
+X_train, X_test = X_scaled[:3928], X_scaled[3928:]
+y_train, y_test = y[:3928], y[3928:]
 
 #create a dataset class
 class SelectDataset(Dataset):
