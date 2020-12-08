@@ -29,8 +29,7 @@ for i in range(df_new.shape[1]):
         df_new.iloc[:,i] = df_new.iloc[:,i].map(mapping)
 
 
-#divide data into features and labels
-        
+#divide data into features and labels        
 X = df_new.drop("Volume", axis = 1)
 y = df_new.Volume
 
@@ -146,3 +145,16 @@ for epoch in range(epochs):
     print('epochs {}/{}'.format(epoch+1,epochs))
     Train()
     Test()
+    
+#Plot the losses
+fig, ax = plt.subplots()
+color = "tab:blue"
+ax.plot(range(100), train_losses, color = color, label = "train loss")
+
+color = "tab:red"
+ax.plot(range(100), test_losses, color = color, label = "test loss")
+
+legend = ax.legend(loc='upper right', shadow=True, fontsize='x-large')
+
+
+plt.show
