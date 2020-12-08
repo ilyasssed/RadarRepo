@@ -9,8 +9,9 @@ import torchvision.transforms as transforms
 from torch.utils.data import Dataset,DataLoader
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
+from sklearn.preprocessing import MinMaxScaler
 
-df = pd.read_csv("Radar_Traffic_Counts.csv")
+df = pd.read_csv("Radar_Traffic_Counts.csv")                        
 df_new = df.copy()
 
 #Sortby date to get logical predictions 
@@ -33,15 +34,19 @@ for i in range(df_new.shape[1]):
 X = df_new.drop("Volume", axis = 1)
 y = df_new.Volume
 
-#take a small part of data to accelerate computation
-X = X.iloc[:5000, :]
-y = y.iloc[:5000]
+scaler = MinMaxScaler()
+scaler.fit(np.array(y).reshape(-1,1))
+y_scaled = scaler.transform(np.array(y).reshape(-1,1))
 
-scaler = StandardScaler()
+#take a small part of data to accelerate computation
+X = X.iloc[:10000, :]
+y = y_scaled[:10000]
+
+scaler = MinMaxScaler()
 scaler.fit(X)
 X_scaled = scaler.transform(X)
-X_train, X_test = X_scaled[:3928], X_scaled[3928:]
-y_train, y_test = y[:3928], y[3928:]
+X_train, X_test = X_scaled[:8000], X_scaled[8000:]
+y_train, y_test = y[:8000], y[8000:]
 
 #create a dataset class
 class SelectDataset(Dataset):
@@ -61,7 +66,7 @@ class SelectDataset(Dataset):
     
 #transform datasets into Pytorch tensors
 X_train, X_test = torch.tensor(X_train), torch.tensor(X_test)
-y_train, y_test = torch.tensor(y_train.values), torch.tensor(y_test.values)
+y_train, y_test = torch.tensor(y_train), torch.tensor(y_test)
 batch_size = 10
 test = SelectDataset(X_test,y_test)
 train = SelectDataset(X_train, y_train)
@@ -99,7 +104,7 @@ def Train():
     running_loss = .0
     
     model.train()
-    counter = 0
+    
     for idx, (inputs,labels) in enumerate(train_loader):
         
         inputs = inputs.to(device)
@@ -149,12 +154,13 @@ for epoch in range(epochs):
 #Plot the losses
 fig, ax = plt.subplots()
 color = "tab:blue"
-ax.plot(range(100), train_losses, color = color, label = "train loss")
+ax.plot(range(len(train_losses)), train_losses, color = color, label = "train loss")
 
 color = "tab:red"
-ax.plot(range(100), test_losses, color = color, label = "test loss")
+ax.plot(range(len(test_losses)), test_losses, color = color, label = "test loss")
 
 legend = ax.legend(loc='upper right', shadow=True, fontsize='x-large')
 
-
 plt.show
+
+
