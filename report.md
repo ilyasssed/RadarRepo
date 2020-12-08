@@ -8,7 +8,11 @@ After importing data and taking a look at it, we can see that we have columns fo
 As a first step, we take only the first 5000 values to speed up the computations. We can see that for the first 5000 values, we have some values that correspond to the 6th month of the year 2017 and some other values that correspond to the 7th month. We take the values that correspond to month 6 as training values and the ones of month 7 as test values. 
 Our data is then ready, we transform our data to Pytorch tensosrs, and we are ready to begin working on our models.
 
+## Fully connected Neural Network
 
+## Convolutional neural network
+
+## Reccurent Neural Network
 
 - The syntax is very simple: it's just raw texts with special formatting for titles, images, equations, etc.
 - Get a look [here](https://www.markdownguide.org/cheat-sheet/) for a quick guide about the syntax
