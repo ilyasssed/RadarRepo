@@ -117,7 +117,8 @@ for epoch in range(epochs):
     Test()
 ```
 After 300 epochs we can plot the following graphic to see the evolution of a losses for training and testing.
-<img src="Deep_Feed_Forward_MSE_losses.png" width="50%"/>
+
+![alt text]<img src="Deep_Feed_Forward_MSE_losses.png" width="50%"/>
 ## Convolutional neural network
 
 ## Reccurent Neural Network
