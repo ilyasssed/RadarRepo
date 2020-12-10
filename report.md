@@ -1,6 +1,6 @@
 # Report Project : Predicting Trafic volume using neural networks
 
-Authors: Ilyass Seddoug
+Author: Ilyass Seddoug
 
 ## Data preprocessing
 
@@ -9,7 +9,7 @@ As a first step, we take only a small ammount of data to speed up te computation
 First of all, we define a function SelectDataset to create our dataset based on our feature and labels. We transform our data to Pytorch tensors, we create dataloaders for training and for testing and then we are ready to begin working on our models.
 
 ## Deep Feed-Forward Neural Network
-We build a model with multiple hidden layers that we train and test for 200 epochs. We choose touse multiple layers to avoid the problem of overfitting and have a better  generalization. 
+We build a model NN, with multiple hidden layers that we train and test for 200 epochs. We choose touse multiple layers to avoid the problem of overfitting and have a better  generalization. 
 
 ```python
 class NN(nn.Module):
@@ -34,7 +34,29 @@ After creating an instance of the nn.Module usning the super() function, we defi
         self.fc2 = nn.Linear(5,5)
         self.fc3 = nn.Linear(5,1)  
 ```
-A fuully connected layer is represented by nn.Linear object.The first parameter 
+A fuully connected layer is represented by nn.Linear object.The first parameter being the number of nodes in the first layer, which is  for the first layer the number of features of one line of X. The second paramter is the number of nodes in the next layer, which is for the last layer, the number of labels which is one in our case, and it is the volume we want to predict.
+After defining the architecture of the model, we define how data will go through our model using a forward() method. 
+def forward(self,x):
+
+```python
+def forward(self,x):
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
+```
+First we affect to our x the result of the transformation of x after coming out of the first layer, a ReLU activation using the relu function. Then, we make our x go through the second layer and a ReLU activation. The last step is to make x go through the final layer.
+
+Next, we are going to choose to use gpu if we have cuda and cpu instead. we create an instance of our NN model, and then we create an Adam optimizer, with the parameters of the instance of our model using the parameters() method, and the learning rate of 1e-5.
+We set the loss criterion to be the Mean square error loss, which calculates the squared difference between the predicted values and the actual values.
+
+```python
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+model = NN().to(device)
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-5)
+criterion = nn.MSELoss()
+```
+
 ## Convolutional neural network
 
 ## Reccurent Neural Network
