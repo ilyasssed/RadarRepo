@@ -147,7 +147,7 @@ def Test():
 
 #Do 500 epochs and see how the loss changes
 
-epochs = 500
+epochs = 300
 for epoch in range(epochs):
     print('epochs {}/{}'.format(epoch+1,epochs))
     Train()
@@ -219,7 +219,7 @@ def Test_huber():
     
 
 #Do 100 epochs using this new loss
-epochs = 500
+epochs = 300
 for epoch in range(epochs):
     print('epochs {}/{}'.format(epoch+1,epochs))
     Train_huber()
@@ -299,7 +299,7 @@ def Test_CNN():
         test_losses_CNN.append(test_loss.detach().cpu().numpy())
         print(f'test_loss {test_loss}')
 
-epochs = 40
+epochs = 300
 for epoch in range(epochs):
     print('epochs {}/{}'.format(epoch+1,epochs))
     Train_CNN()
