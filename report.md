@@ -84,6 +84,40 @@ def Train():
 ```
 In the training function, we first initialize our loss to zero before going through our data. We set our model mode to train and then we go through each batch of data using the train data loader. Next we set all gradients to zero, so that the model is ready to go through the next back-propagation, using the zero-grad() method. Then, we predict using our model, and then calculate the loss for this prediction. Then we run a back-propagation operation from the loss Variable backwards through the network. And before adding our loss to our final loss, we execute a gradient descent, based on the gradients calculated during the .backward() operation. Finally, we calculate the final losss by dividing the loss by the len of our data, and store our loss so we can use it for a plotting later. Then we print our loss.
 
+After that we define the test function. It looks the same as the trainging function, but without the back propagation.
+
+```python
+test_losses = []
+
+def Test():
+    
+    running_loss = .0
+    model.eval()
+    
+    with torch.no_grad():
+        for idx, (inputs, labels) in enumerate(test_loader):
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+            optimizer.zero_grad()
+            preds = model(inputs.float())
+            loss = criterion(preds,labels)
+            running_loss += loss
+            
+        test_loss = running_loss/len(test_loader)
+        test_losses.append(test_loss.detach().cpu().numpy())
+        print(f'test_loss {test_loss}')
+```
+After defining those two functions, we can loop through our epochs and printthe results of each epoch with the following code:
+
+```python
+epochs = 300
+for epoch in range(epochs):
+    print('epochs {}/{}'.format(epoch+1,epochs))
+    Train()
+    Test()
+```
+After 300 epochs we can plot the following graphic to see the evolution of a losses for training and testing.
+<img src="Deep_Feed_Forward_MSE_losses.png" width="50%"/>
 ## Convolutional neural network
 
 ## Reccurent Neural Network
