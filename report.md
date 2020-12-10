@@ -19,7 +19,7 @@ We build a model with one hidden layer that we train and test for 200 epochs.
 
 - The syntax is very simple: it's just raw texts with special formatting for titles, images, equations, etc.
 - Get a look [here](https://www.markdownguide.org/cheat-sheet/) for a quick guide about the syntax
-- Including an image like this: <img src="dephell.png" width="50%"/> (*attribution: XKCD.com*)
+- Including an image like this: <img src="CNN Losses.png" width="50%"/> (*attribution: XKCD.com*)
 - Including a table is a bit annoying, but most good editors have plugins to easily edit markdown tables:
 
 | Left-aligned | Center-aligned | Right-aligned |
