@@ -9,6 +9,7 @@ As a first step, we take only a small ammount of data to speed up te computation
 First of all, we define a function SelectDataset to create our dataset based on our feature and labels. We transform our data to Pytorch tensors, we create dataloaders for training and for testing and then we are ready to begin working on our models.
 
 ## Deep Feed-Forward Neural Network
+#### Building model
 We build a model NN, with multiple hidden layers that we train and test for 300 epochs. We choose touse multiple layers to avoid the problem of overfitting and have a better  generalization. 
 
 ```python
@@ -47,6 +48,7 @@ def forward(self,x):
 ```
 First we affect to our x the result of the transformation of x after coming out of the first layer, a ReLU activation using the relu function. Then, we make our x go through the second layer and a ReLU activation. The last step is to make x go through the final layer.
 
+#### Training & testing the model
 Next, we are going to choose to use gpu if we have cuda and cpu instead. we create an instance of our NN model, and then we create an Adam optimizer, with the parameters of the instance of our model using the parameters() method, and the learning rate of 1e-5.
 We set the loss criterion to be the Mean square error loss, which calculates the squared difference between the predicted values and the actual values.
 
@@ -116,41 +118,38 @@ for epoch in range(epochs):
     Train()
     Test()
 ```
+
+
+#### Results
 After 300 epochs we can plot the following graphic to see the evolution of a losses for training and testing.
 
-                        <img src="Deep_Feed_Forward_MSE_losses.png" width="50%"/>
+<img src="Deep_Feed_Forward_MSE_losses.png" width="50%"/>
+
+We can see that at 200 epochs the losses for training and for testing, reach a  minimum value. But we can see that the test loss reaches a lower minimum than the training loss. This may be due to the fact that the validation set is easier to predict than the training set (by chance). Or to the fact that we have some phenomenon that is repeated in time, so the model has already seen it in the training set before encountering it in the validation set. Another possible scenario, is that the validation set is too small compared to the training set. We took a train set that is 80% of the used data and a test set that is 20% of the whole used data. So maybe we can try to take larger test sets and see if the phenomenon we encountered in here is repeated. But before that, we are going to test some other loss criterion and see if we  can converge to a minimum loss before 200 epochs.
+
+We use the huber loss which is calculated this way:
+
+<img src="Huber_Loss.png" width="50%"/>
+
+It is less sensitive to outliers than the mean square error loss and in some cases prevents exploding gradients, because it doesn't square terms greater than one.
+
+So we can see the following evolution of the huber loss using our first model:
+
+<img src="Deep_Feed_Forward_huber_losses.png" width="50%"/>
+
+
+
 
 ## Convolutional neural network
 
 ## Reccurent Neural Network
 
-- The syntax is very simple: it's just raw texts with special formatting for titles, images, equations, etc.
-- Get a look [here](https://www.markdownguide.org/cheat-sheet/) for a quick guide about the syntax
-- Including an image like this: <img src="CNN Losses.png" width="50%"/> (*attribution: XKCD.com*)
-- Including a table is a bit annoying, but most good editors have plugins to easily edit markdown tables:
 
-| Left-aligned | Center-aligned | Right-aligned |
-| :---         |     :---:      |          ---: |
-| git status   | git status     | git status    |
-| git diff     | git diff       | git diff      |
-
-- For a quotation with reference: "...the **go to** statement should be abolished..." [[1]](#1).
-
-- If you want a PDF version of your report, you may convert it with pandoc:
-
-```
-   pandoc -s report.md -o report.pdf
-```
-
-or, if you use the img tag, you have to first convert into pure html:
-
-```
-pandoc -t html report.md | pandoc -f html -o report.pdf
-```
 
 ## References
 <a id="1">[1]</a> 
-Dijkstra, E. W. (1968). 
-Go to statement considered harmful. 
-Communications of the ACM, 11(3), 147-148.
+https://medium.com/udacity-pytorch-challengers/a-brief-overview-of-loss-functions-in-pytorch-c0ddb78068f7
+https://adventuresinmachinelearning.com/pytorch-tutorial-deep-learning/
+https://adventuresinmachinelearning.com/convolutional-neural-networks-tutorial-in-pytorch/
+
 
