@@ -1,11 +1,7 @@
 import pandas as pd
 import numpy as np
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
 import torch
-import torchvision
 import torch.nn as nn
-import torchvision.transforms as transforms
 from torch.utils.data import Dataset,DataLoader
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
