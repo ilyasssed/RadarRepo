@@ -8,10 +8,26 @@ After importing data and taking a look at it, we can see that we have columns fo
 As a first step, we take only a small ammount of data to speed up te computations and test our models  on this small amount. After testing our models, and if we find that we may need more data, we can add data and train our models again. After that we scale the data to bring the vaues between 0 and 1, so that the scale of the data doesn't affect the convergence of our model, since neural networks are sensitive to the scales, and larger values may take better importance if not scaled. For that we use the minmaxscaler from sklearn.
 First of all, we define a function SelectDataset to create our dataset based on our feature and labels. We transform our data to Pytorch tensors, we create dataloaders for training and for testing and then we are ready to begin working on our models.
 
-## Feed-Forward Neural Network
-### One hidden layer
+## Deep Feed-Forward Neural Network
+We build a model with multiple hidden layers that we train and test for 200 epochs. We choose touse multiple layers to avoid the problem of overfitting and have a better  generalization. 
 
-We build a model with one hidden layer that we train and test for 200 epochs.
+```python
+class NN(nn.Module):
+    
+    def __init__(self):
+        super(NN,self).__init__()
+        self.fc1 = nn.Linear(11,5)
+        self.fc2 = nn.Linear(5,5)
+        self.fc3 = nn.Linear(5,1)
+        
+    def forward(self,x):
+
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+
+        return x
+```
 
 ## Convolutional neural network
 
