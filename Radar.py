@@ -38,13 +38,15 @@ scaler = MinMaxScaler()
 scaler.fit(np.array(y).reshape(-1,1))
 y_scaled = scaler.transform(np.array(y).reshape(-1,1))
 
-#take a small part of data to accelerate computation
-X = X.iloc[:10000, :]
-y = y_scaled[:10000]
-
 scaler = MinMaxScaler()
 scaler.fit(X)
 X_scaled = scaler.transform(X)
+#take a small part of data to accelerate computation
+
+X_scaled = X_scaled[:10000, :]
+y = y_scaled[:10000]    
+
+
 X_train, X_test = X_scaled[:8000], X_scaled[8000:]
 y_train, y_test = y[:8000], y[8000:]
 
