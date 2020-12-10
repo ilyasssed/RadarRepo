@@ -1,6 +1,6 @@
 # Report Project : Predicting Trafic volume using neural networks
 
-Author: Ilyass Seddoug
+### Author: Ilyass Seddoug
 
 ## Data preprocessing
 
@@ -9,7 +9,7 @@ As a first step, we take only a small ammount of data to speed up te computation
 First of all, we define a function SelectDataset to create our dataset based on our feature and labels. We transform our data to Pytorch tensors, we create dataloaders for training and for testing and then we are ready to begin working on our models.
 
 ## Deep Feed-Forward Neural Network
-We build a model NN, with multiple hidden layers that we train and test for 200 epochs. We choose touse multiple layers to avoid the problem of overfitting and have a better  generalization. 
+We build a model NN, with multiple hidden layers that we train and test for 300 epochs. We choose touse multiple layers to avoid the problem of overfitting and have a better  generalization. 
 
 ```python
 class NN(nn.Module):
@@ -34,7 +34,7 @@ After creating an instance of the nn.Module usning the super() function, we defi
         self.fc2 = nn.Linear(5,5)
         self.fc3 = nn.Linear(5,1)  
 ```
-A fuully connected layer is represented by nn.Linear object.The first parameter being the number of nodes in the first layer, which is  for the first layer the number of features of one line of X. The second paramter is the number of nodes in the next layer, which is for the last layer, the number of labels which is one in our case, and it is the volume we want to predict.
+A fully connected layer is represented by nn.Linear object.The first parameter being the number of nodes in the first layer, which is  for the first layer the number of features of one line of X. The second paramter is the number of nodes in the next layer, which is for the last layer, the number of labels which is one in our case, and it is the volume we want to predict.
 After defining the architecture of the model, we define how data will go through our model using a forward() method. 
 def forward(self,x):
 
@@ -56,6 +56,33 @@ model = NN().to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=1e-5)
 criterion = nn.MSELoss()
 ```
+The next step is to define a training and a testing function, to train and test our model for the number of epochs that we choose.
+
+```python
+
+train_losses = []
+def Train():
+  
+    running_loss = .0
+    model.train()
+    
+    for idx, (inputs,labels) in enumerate(train_loader):
+        
+        inputs = inputs.to(device)
+        labels = labels.float().to(device)
+        optimizer.zero_grad()
+        preds = model(inputs.float())
+        loss = criterion(preds,labels)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss
+        
+    train_loss = running_loss/len(train_loader)
+    train_losses.append(train_loss.detach().cpu().numpy())
+    
+    print(f'train_loss {train_loss}')
+```
+In the training function, we first initialize our loss to zero before going through our data. We set our model mode to train and then we go through each batch of data using the train data loader. Next we set all gradients to zero, so that the model is ready to go through the next back-propagation, using the zero-grad() method. Then, we predict using our model, and then calculate the loss for this prediction. Then we run a back-propagation operation from the loss Variable backwards through the network. And before adding our loss to our final loss, we execute a gradient descent, based on the gradients calculated during the .backward() operation. Finally, we calculate the final losss by dividing the loss by the len of our data, and store our loss so we can use it for a plotting later. Then we print our loss.
 
 ## Convolutional neural network
 
