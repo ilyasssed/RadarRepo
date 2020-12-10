@@ -145,7 +145,7 @@ def Test():
 
 #Do 100 epochs and see how the loss changes
 
-epochs = 100
+epochs = =500
 for epoch in range(epochs):
     print('epochs {}/{}'.format(epoch+1,epochs))
     Train()
@@ -163,4 +163,62 @@ legend = ax.legend(loc='upper right', shadow=True, fontsize='x-large')
 
 plt.show
 
+#Now we're going to change the MSE loss to the Huber Loss
 
+model1 = NN().to(device)
+optimizer = torch.optim.Adam(model1.parameters(), lr=1e-5)
+criterion = nn.SmoothL1Loss()
+
+train_losses_huber = []
+
+
+def Train_huber():
+    
+    running_loss = .0
+    
+    model1.train()
+    
+    for idx, (inputs,labels) in enumerate(train_loader):
+        
+        inputs = inputs.to(device)
+        labels = labels.float().to(device)
+        optimizer.zero_grad()
+        preds = model1(inputs.float())
+        loss = criterion(preds,labels)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss
+        
+    train_loss = running_loss/len(train_loader)
+    train_losses_huber.append(train_loss.detach().cpu().numpy())
+    
+    print(f'train_loss {train_loss}')
+
+test_losses_huber = []
+
+def Test_huber():
+    
+    running_loss = .0
+    
+    model1.eval()
+    
+    with torch.no_grad():
+        for idx, (inputs, labels) in enumerate(test_loader):
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+            optimizer.zero_grad()
+            preds = model1(inputs.float())
+            loss = criterion(preds,labels)
+            running_loss += loss
+            
+        test_loss = running_loss/len(test_loader)
+        test_losses_huber.append(test_loss.detach().cpu().numpy())
+        print(f'test_loss {test_loss}')
+    
+
+#Do 100 epochs using this new loss
+epochs = 500
+for epoch in range(epochs):
+    print('epochs {}/{}'.format(epoch+1,epochs))
+    Train_huber()
+    Test_huber()
