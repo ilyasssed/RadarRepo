@@ -28,7 +28,13 @@ class NN(nn.Module):
 
         return x
 ```
-
+After creating an instance of the nn.Module usning the super() function, we define our fully connected layers in the next lines:
+```python
+        self.fc1 = nn.Linear(11,5)
+        self.fc2 = nn.Linear(5,5)
+        self.fc3 = nn.Linear(5,1)  
+```
+A fuully connected layer is represented by nn.Linear object.The first parameter 
 ## Convolutional neural network
 
 ## Reccurent Neural Network
