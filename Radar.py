@@ -143,9 +143,9 @@ def Test():
         print(f'test_loss {test_loss}')
 
 
-#Do 100 epochs and see how the loss changes
+#Do 500 epochs and see how the loss changes
 
-epochs = =500
+epochs = 500
 for epoch in range(epochs):
     print('epochs {}/{}'.format(epoch+1,epochs))
     Train()
@@ -297,20 +297,22 @@ def Test_CNN():
         test_losses_CNN.append(test_loss.detach().cpu().numpy())
         print(f'test_loss {test_loss}')
 
-epochs = 200
+epochs = 40
 for epoch in range(epochs):
     print('epochs {}/{}'.format(epoch+1,epochs))
     Train_CNN()
     Test_CNN()
     
 #Plot the losses
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize = (10,8))
 color = "tab:blue"
 ax.plot(range(len(train_losses_CNN)), train_losses_CNN, color = color, label = "train loss")
 
 color = "tab:red"
 ax.plot(range(len(test_losses_CNN)), test_losses_CNN, color = color, label = "test loss")
 
+ax.set_xlabel("Epochs")
+ax.set_ylabel("Losses")
 legend = ax.legend(loc='upper right', shadow=True, fontsize='x-large')
 
 plt.show
