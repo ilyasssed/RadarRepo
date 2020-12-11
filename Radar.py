@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import torch
 import torch.nn as nn
-from torch.utils.data import Dataset,DataLoader
+    from torch.utils.data import Dataset,DataLoader
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
