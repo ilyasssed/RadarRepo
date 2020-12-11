@@ -137,11 +137,14 @@ So we can see the following evolution of the huber loss using our first model:
 
 <img src="Deep_Feed_Forward_huber_losses.png" width="50%"/>
 
+We can see that we reach a lower level of the loss before 200 epochs. However the loss keeps going lower, if we zoom into the part between the 150's epoch and the 300's epoch, we can see that the loss gets lower with each epoch. We can say that if we give it more epochs, our model may give better performance. With 300 epochs, we reached a training loss of 0.01 and a validation loss of 0.008, which we can say that it is not bad.
 
+<img src="Deep_Feed_Forward_huber_losses_zoom.png" width="50%"/>
 
+So to sum up, with a deep feed forward model, we reached a low level of loss using a small amount of our data. However, at a certain level of epochs, the model learning became very slow, and the loss wasn't going lower fast enough. Now we are going to see what we can do using a convolutional neural network.
 
 ## Convolutional neural network
-
+Convolutional neural networks exploit the correlation between the adjacent inputs to reduce the number of wheights to be learned. we are going to train a convolutional neural network
 ## Reccurent Neural Network
 
 
