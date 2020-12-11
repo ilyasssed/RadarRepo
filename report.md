@@ -144,7 +144,90 @@ We can see that we reach a lower level of the loss before 200 epochs. However th
 So to sum up, with a deep feed forward model, we reached a low level of loss using a small amount of our data. However, at a certain level of epochs, the model learning became very slow, and the loss wasn't going lower fast enough. Now we are going to see what we can do using a convolutional neural network.
 
 ## Convolutional neural network
-Convolutional neural networks exploit the correlation between the adjacent inputs to reduce the number of wheights to be learned. we are going to train a convolutional neural network
+Convolutional neural networks exploit the correlation between the adjacent inputs to reduce the number of wheights to be learned. we are going to train a convolutional neural network using the following code:
+
+```python
+class CNN(nn.Module):
+    def __init__(self):
+        super(CNN,self).__init__()
+        self.conv1d = nn.Conv1d(1,32,kernel_size= 3, stride = 1)
+        self.relu = nn.ReLU(inplace = True)
+        self.maxpool = nn.MaxPool1d(3, stride=1)
+        self.fc1 = nn.Linear(7 * 32,50)
+        self.fc2 = nn.Linear(50,1)
+        
+    def forward(self,x):
+        x = self.conv1d(x)
+        x = self.relu(x)
+        x = self.maxpool(x)
+        x = x.view(10,-1)
+        x = self.fc1(x)
+        x = self.relu(x)
+        x = F.dropout(x, training=self.training)
+        x = self.fc2(x)
+        
+        return x
+```
+
+The first layer consists of 32 channels of convolutional filters with kernel of 3 and a stride of 1, followed by a ReLU activation and a max-pooling downsampling iwth kernel 3 and a stride of 1. As an input for the convolutional neural network, we've got our features that are 11, and we getan output of 9 features. Next after going through the max-pooling layer, we get an output of 7 features. This output will be feeded to our fully connected layer. Since we've got 32 channels, our fully connected layer would be composed of 7*32 nodes because we've got an output of 7 features for the maxpooling layer. And finally, we add a final fully connected layer to predict our labels.
+Now that we defined our model, we should define how data flows through it using the forward function. First our input goes into the convolutional layer, then goes into a ReLU validation, and then into a maxpooling layer. We then change the dimensions of our x using the view() method. This step is important to bring our data that is composed of 32 channels of 7 features into one level of 7*32. After that our x goes through the fully connected layer, then a ReLU validation and a dropout to reduce the overfitting. 
+
+We use the same Train and Test function we used before, we just change the model to the CNN model. We use a Huber loss too. We use the view() method to adapt our input to the convolutional layer.
+
+```python
+model = CNN().to(device)
+optimizer = torch.optim.Adam(model.parameters(), lr=1e-5)
+criterion = nn.SmoothL1Loss()
+
+train_losses = []
+
+
+def Train_CNN():
+    
+    running_loss = .0
+    
+    model.train()
+    
+    for idx, (inputs,labels) in enumerate(train_loader):
+        inputs = inputs.view(-1,1,11)
+        inputs = inputs.to(device)
+        labels = labels.float().to(device)
+        optimizer.zero_grad()
+        preds = model(inputs.float())
+        loss = criterion(preds,labels)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss
+        
+    train_loss = running_loss/len(train_loader)
+    train_losses.append(train_loss.detach().cpu().numpy())
+    
+    print(f'train_loss {train_loss}')
+
+test_losses = []
+
+def Test_CNN():
+    
+    running_loss = .0
+    
+    model.eval()
+    
+    with torch.no_grad():
+        for idx, (inputs, labels) in enumerate(test_loader):
+            inputs = inputs.view(-1,1,11)
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+            optimizer.zero_grad()
+            preds = model(inputs.float())
+            loss = criterion(preds,labels)
+            running_loss += loss
+            
+        test_loss = running_loss/len(test_loader)
+        test_losses.append(test_loss.detach().cpu().numpy())
+        print(f'test_loss {test_loss}')
+```
+### Results
+After 300 epochs, we get a training loss of 0.01 and a test loss 0f 0.008. It is the same loss we got using the 
 ## Reccurent Neural Network
 
 
