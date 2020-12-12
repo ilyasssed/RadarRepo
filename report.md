@@ -239,7 +239,7 @@ As we can see, when we took a different validation set, we have got a training l
 We can try and take a bigger validation set and see if this may affect our validation loss.
 Now we will try to use reccurent neural networks, because they are a good method to predict time series.
 
-## Reccurent Neural Network
+## Recurrent Neural Network
 RNN are just FNN (Feedforward Neural Networks) that have a hidden layer that makes information flows from one FNN to the other. It allows time deppendency between FNNs. So, in our RNN, we are going to use 2 time sequences. For each time sequence, we are going to introduce one X, which is 11 features. So, we are going to need to change the size of our input data, for that we create a dataset that for each line, takes 2 lines of our X.
 
 ```python
@@ -350,13 +350,16 @@ We can see again that the test loss is lower than the training loss, but when us
 We can reach a loss of 0.008 for the test and the training losses, which is better than the other models. It is maybe due to the relationship in time between our lines. There should be a link between the data in time, and this link is making the RNN performing better than other models.
 
 ## Conclusion
-
+So our data was composed of information concerning Radar Trafic, and we tried to predict traffic volume using neural networks.  We tried different types of neural networks: (Deep Feeforward, Convolutional and Recurrent), and 2 types of losses: (The Mean Squared Error and the Huber loss). We could see that we got nearly the same results for the Deep Feedforward and the convolutional neural networks, but the convolutional neural networks used less epochs with the same ammount of data. The RNNs gave us better results, and took much less computing time. We could also see that for several times, we have got a testing loss that was lower than the training loss. This is maybe due to the nature of the train and the validation sets we havee choosen, because when we changed the test set, we have got different behavior. So, to sum up, it may be interessting to use the models with bigger datasets than the ones we have used and this will surelly give us bette models that generate better, and we can also have datasets that represent better the information we are trying to extract from the data.  
 
 ## References
 <a id="1">[1]</a> 
 https://medium.com/udacity-pytorch-challengers/a-brief-overview-of-loss-functions-in-pytorch-c0ddb78068f7
+<a id="2">[2]</a> 
 https://adventuresinmachinelearning.com/pytorch-tutorial-deep-learning/
+<a id="3">[3]</a> 
 https://adventuresinmachinelearning.com/convolutional-neural-networks-tutorial-in-pytorch/
+<a id="4">[4]</a> 
 https://www.deeplearningwizard.com/deep_learning/practical_pytorch/pytorch_recurrent_neuralnetwork/
 
 
