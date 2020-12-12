@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import torch
 import torch.nn as nn
-    from torch.utils.data import Dataset,DataLoader
+from torch.utils.data import Dataset,DataLoader
 import torch.nn.functional as F
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
@@ -39,11 +39,11 @@ scaler.fit(X)
 X_scaled = scaler.transform(X)
 #take a small part of data to accelerate computation
 
-X_scaled = X_scaled[:10000, :]
+X = X_scaled[:10000, :]
 y = y_scaled[:10000]    
 
 
-X_train, X_test = X_scaled[:8000], X_scaled[8000:]
+X_train, X_test = X[:8000], X[8000:]
 y_train, y_test = y[:8000], y[8000:]
 
 #create a dataset class
