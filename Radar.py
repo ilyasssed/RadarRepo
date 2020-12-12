@@ -318,7 +318,7 @@ plt.show
 
 #RNN
 
-#Reshape the data to use for RNNs
+#Reshape the data to use for RNNs and build the dataloaders
 X_train, X_test = X_train.view(-1,2,11), X_test.view(-1, 2, 11)
 y_train, y_test = y_train.view(-1, 2), y_test.view(-1,2)
 
@@ -328,12 +328,104 @@ train = SelectDataset(X_train, y_train)
 train_loader = DataLoader(train, batch_size = batch_size,shuffle = False)
 test_loader = DataLoader(test, batch_size = batch_size, shuffle = False)
 
-#building RNN
+#Building RNN
+
+class RNN(nn.Module):
+    def __init__(self, input_dim, hidden_dim, layer_dim, output_dim):
+        
+        super(RNN, self).__init__()
+        self.hidden_dim = hidden_dim #hidden layer dimension
+        self.layer_dim = layer_dim  #number of hidden layers
+        self.rnn = nn.RNN(input_dim, hidden_dim, layer_dim, batch_first=True, nonlinearity='relu')
+        self.fc = nn.Linear(hidden_dim, output_dim)
+
+    def forward(self, x):
+        # Initialize hidden state with zeros
+        h0 = torch.zeros(self.layer_dim, x.size(0), self.hidden_dim).requires_grad_().cuda()
+        x, hn = self.rnn(x, h0.detach())
+
+        x = self.fc(x[:, -1, :])  #just want last time step hidden states
+
+        return x
+
+#Train and test our model
+
+#Model parameters        
+input_dim = 11
+hidden_dim = 100
+layer_dim = 1
+output_dim = 2
+
+model_RNN = RNN(input_dim, hidden_dim, layer_dim, output_dim).to(device)
+optimizer = torch.optim.Adam(model_RNN.parameters(), lr=1e-5)
+criterion = nn.SmoothL1Loss()
+
+train_losses_RNN = []
+
+def Train_RNN():
+    
+    running_loss = .0
+    
+    model_RNN.train()
+    
+    for idx, (inputs,labels) in enumerate(train_loader):
+        inputs = inputs.to(device)
+        labels = labels.float().to(device)
+        optimizer.zero_grad()
+        preds = model_RNN(inputs.float())
+        loss = criterion(preds,labels)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss
+        
+    train_loss = running_loss/len(train_loader)
+    train_losses_RNN.append(train_loss.detach().cpu().numpy())
+    
+    print(f'train_loss {train_loss}')
+
+test_losses_RNN = []
+
+def Test_RNN():
+    
+    running_loss = .0
+    
+    model_RNN.eval()
+    
+    with torch.no_grad():
+        for idx, (inputs, labels) in enumerate(test_loader):
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+            optimizer.zero_grad()
+            preds = model_RNN(inputs.float())
+            loss = criterion(preds,labels)
+            running_loss += loss
+            
+        test_loss = running_loss/len(test_loader)
+        test_losses_RNN.append(test_loss.detach().cpu().numpy())
+        print(f'test_loss {test_loss}')
 
 
+epochs = 300
+for epoch in range(epochs):
+    print('epochs {}/{}'.format(epoch+1,epochs))
+    Train_RNN()
+    Test_RNN()
 
 
+#Plot the results
+    
+fig, ax = plt.subplots()
+color = "tab:blue"
+ax.plot(range(len(train_losses_RNN)), train_losses_RNN, color = color, label = "train loss")
 
+color = "tab:red"
+ax.plot(range(len(test_losses_RNN)), test_losses_RNN, color = color, label = "test loss")
+
+legend = ax.legend(loc='upper right', shadow=True, fontsize='x-large')
+ax.set_xlabel("Epochs")
+ax.set_ylabel("Losses")
+
+plt.show
 
 
 
