@@ -2,8 +2,10 @@
 
 ### Author: Ilyass Seddoug
 
-## Data preprocessing
+## Introduction
+Our data is composed of Traffic data collected from the several Wavetronix radar sensors deployed by the City of Austin. Dataset is augmented with geo coordinates from sensor location dataset. We will use this data and try to predict volume using different types of neural networks. This data can be considered as time series.
 
+## Data preprocessing
 After importing data and taking a look at it, we can see that we have columns for years, months and day. So, it would be better if we sorted the lines by years, months then days. After that, we transform our qualitative columns into integer classes so we can use them for our neural networks. We separate our labels and features into 2 variables, X for the features and y for the labels which is the variable to predict, the traffic volume. 
 As a first step, we take only a small amount of data to speed up the computations and test our models on this small amount. After testing our models, and if we find that we may need more data, we can add data and train our models again. After that we scale the data to bring the values between 0 and 1, so that the scale of the data doesn't affect the convergence of our model, since neural networks are sensitive to the scales, and larger values may take better importance if not scaled. For that we use the minmaxscaler from sklearn.
 First of all, we define a function SelectDataset to create our dataset based on our feature and labels. We transform our data to Pytorch tensors, we create dataloaders for training and for testing and then we are ready to begin working on our models.
@@ -353,9 +355,10 @@ We can reach a loss of 0.008 for the test and the training losses, which is bett
 So, our data was composed of information concerning Radar Traffic, and we tried to predict traffic volume using neural networks.  We tried different types of neural networks: (Deep Feedforward, Convolutional and Recurrent), and 2 types of losses: (The Mean Squared Error and the Huber loss). We could see that we got nearly the same results for the Deep Feedforward and the convolutional neural networks, but the convolutional neural networks used less epochs with the same amount of data. The RNNs gave us better results, and took much less computing time. We could also see that for several times, we have got a testing loss that was lower than the training loss. This is maybe due to the nature of the train and the validation sets we have chosen, because when we changed the test set, we have got different behavior. So, to sum up, it may be interesting to use the models with bigger datasets than the ones we have used and this will surely give us better models that generate better, and we can also have datasets that represent better the information we are trying to extract from the data.  
 
 ## References
-[1] https://medium.com/udacity-pytorch-challengers/a-brief-overview-of-loss-functions-in-pytorch-c0ddb78068f7   
-[2] https://adventuresinmachinelearning.com/pytorch-tutorial-deep-learning/   
-[3] https://adventuresinmachinelearning.com/convolutional-neural-networks-tutorial-in-pytorch/   
-[4] https://www.deeplearningwizard.com/deep_learning/practical_pytorch/pytorch_recurrent_neuralnetwork/   
+[1]https://medium.com/udacity-pytorch-challengers/a-brief-overview-of-loss-functions-in-pytorch-c0ddb78068f7   
+[2]https://adventuresinmachinelearning.com/pytorch-tutorial-deep-learning/   
+[3]https://adventuresinmachinelearning.com/convolutional-neural-networks-tutorial-in-pytorch/   
+[4]https://www.deeplearningwizard.com/deep_learning/practical_pytorch/pytorch_recurrent_neuralnetwork/   
+[5]https://www.kaggle.com/vinayshanbhag/radar-traffic-data  
 
 
