@@ -227,9 +227,129 @@ def Test_CNN():
         print(f'test_loss {test_loss}')
 ```
 ### Results
-After 300 epochs, we get a training loss of 0.01 and a test loss 0f 0.008. It is the same loss we got using the 
-## Reccurent Neural Network
 
+<img src="CNN Losses.png" width="50%"/>
+
+After 300 epochs, we get a training loss of 0.01 and a test loss 0f 0.008. It is the same loss we got using the deep feed forward neural network. However we can see that we can converge to the minimal loss before  150 epochs. We can also see that the test set is again getting a lower loss than the training set. So maybe it woould be a good idea to use a different test set and see if it acts the same.
+
+<img src="CNN Losses2.png" width="50%"/>
+
+As we can see, when we took a different validation set, we have got a training loss closer to the validation loss than the last one. So maybe this phenomenon that we get is due to the nature of the validation set that may be easier to predict than the traning set.
+
+We can try and take a bigger validation set and see if this may affect our validation loss.
+Now we will try to use reccurent neural networks, because they are a good method to predict time series.
+
+## Reccurent Neural Network
+RNN are just FNN (Feedforward Neural Networks) that have a hidden layer that makes information flows from one FNN to the other. It allows time deppendency between FNNs. So, in our RNN, we are going to use 2 time sequences. For each time sequence, we are going to introduce one X, which is 11 features. So, we are going to need to change the size of our input data, for that we create a dataset that for each line, takes 2 lines of our X.
+
+```python
+X_train, X_test = X_train.view(-1, 2, 11), X_test.view(-1, 2, 11)
+y_train, y_test = y_train.view(-1, 2), y_test.view(-1, 2)
+
+batch_size = 10
+test = SelectDataset(X_test,y_test)
+train = SelectDataset(X_train, y_train)
+train_loader = DataLoader(train, batch_size = batch_size,shuffle = False)
+test_loader = DataLoader(test, batch_size = batch_size, shuffle = False)
+```
+After we have done this, we re going to build our RNN:
+
+```python
+class RNN(nn.Module):
+    def __init__(self, input_dim, hidden_dim, layer_dim, output_dim):
+        
+        super(RNN, self).__init__()
+        self.hidden_dim = hidden_dim 
+        self.layer_dim = layer_dim  
+        self.rnn = nn.RNN(input_dim, hidden_dim, layer_dim, batch_first=True, nonlinearity='relu')
+        self.fc = nn.Linear(hidden_dim, output_dim)
+
+    def forward(self, x):
+
+        h0 = torch.zeros(self.layer_dim, x.size(0), self.hidden_dim).requires_grad_().cuda()
+        x, hn = self.rnn(x, h0.detach())
+        x = self.fc(x[:, -1, :]) 
+
+        return x
+``` 
+The first step is to create a instance of the nn.Modue as we have done for the previous models. After that we define the variables hidden_dim chich represents the dimension of the hidden layer, and layer_dim which represents the number of hidden layers. Then we define the RNN model using the nn.RNN model and all the parameters that it takes, for instance the input dimension which represents the dimension of our input which is going to be 11 in our case. Next we define our FNN using the nn.Linear object. 
+OUr model is defined now, we have to define the way data will flow through it using the forward function. Firt of all, we initialize our hidden states with zerosand put it on gpu because we are going to use gpu after that. Then we make our x go through our RNN, and at the end, we take only the last time step of the RNN and introduce it into the FNN.
+We define training and testing functions like we did for our other models. There are no changes in those functions,we just define the model parameters and then define the model and make it run for  300 epochs.
+
+```python
+input_dim = 11
+hidden_dim = 100
+layer_dim = 1
+output_dim = 2
+
+model_RNN = RNN(input_dim, hidden_dim, layer_dim, output_dim).to(device)
+optimizer = torch.optim.Adam(model_RNN.parameters(), lr=1e-5)
+criterion = nn.SmoothL1Loss()
+
+train_losses_RNN = []
+
+def Train_RNN():
+    
+    running_loss = .0
+    
+    model_RNN.train()
+    
+    for idx, (inputs,labels) in enumerate(train_loader):
+        inputs = inputs.to(device)
+        labels = labels.float().to(device)
+        optimizer.zero_grad()
+        preds = model_RNN(inputs.float())
+        loss = criterion(preds,labels)
+        loss.backward()
+        optimizer.step()
+        running_loss += loss
+        
+    train_loss = running_loss/len(train_loader)
+    train_losses_RNN.append(train_loss.detach().cpu().numpy())
+    
+    print(f'train_loss {train_loss}')
+
+test_losses_RNN = []
+
+def Test_RNN():
+    
+    running_loss = .0
+    
+    model_RNN.eval()
+    
+    with torch.no_grad():
+        for idx, (inputs, labels) in enumerate(test_loader):
+            inputs = inputs.to(device)
+            labels = labels.to(device)
+            optimizer.zero_grad()
+            preds = model_RNN(inputs.float())
+            loss = criterion(preds,labels)
+            running_loss += loss
+            
+        test_loss = running_loss/len(test_loader)
+        test_losses_RNN.append(test_loss.detach().cpu().numpy())
+        print(f'test_loss {test_loss}')
+
+
+epochs = 300
+for epoch in range(epochs):
+    print('epochs {}/{}'.format(epoch+1,epochs))
+    Train_RNN()
+    Test_RNN()
+```
+
+### Results
+When running the RNN, we could see that the running time is faster than all the other models, and after 300 epochs we've got losses that were lower than the other models. 
+
+<img src="RNN_Losses_1.png" width="50%"/>
+
+We can see again that the test loss is lower than the training loss, but when using another slice for validation, we can see that it is just due to the nature of the validation test and not to the model it self:
+
+<img src="RNN_Losses.png" width="50%"/>
+
+We can reach a loss of 0.008 for the test and the training losses, which is better than the other models. It is maybe due to the relationship in time between our lines. There should be a link between the data in time, and this link is making the RNN performing better than other models.
+
+## Conclusion
 
 
 ## References
@@ -237,5 +357,6 @@ After 300 epochs, we get a training loss of 0.01 and a test loss 0f 0.008. It is
 https://medium.com/udacity-pytorch-challengers/a-brief-overview-of-loss-functions-in-pytorch-c0ddb78068f7
 https://adventuresinmachinelearning.com/pytorch-tutorial-deep-learning/
 https://adventuresinmachinelearning.com/convolutional-neural-networks-tutorial-in-pytorch/
+https://www.deeplearningwizard.com/deep_learning/practical_pytorch/pytorch_recurrent_neuralnetwork/
 
 
