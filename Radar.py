@@ -319,6 +319,10 @@ plt.show
 #RNN
 
 #Reshape the data to use for RNNs and build the dataloaders
+
+X_train, X_test = X[:16000], X[16000:]
+y_train, y_test = y[:16000], y[16000:]
+
 X_train, X_test = X_train.view(-1,2,11), X_test.view(-1, 2, 11)
 y_train, y_test = y_train.view(-1, 2), y_test.view(-1,2)
 
