@@ -39,12 +39,12 @@ scaler.fit(X)
 X_scaled = scaler.transform(X)
 #take a small part of data to accelerate computation
 
-X = X_scaled[:10000, :]
-y = y_scaled[:10000]    
+X = X_scaled[:20000, :]
+y = y_scaled[:20000]    
 
 
-X_train, X_test = X[:8000], X[8000:]
-y_train, y_test = y[:8000], y[8000:]
+X_train, X_test = X[:16000], X[16000:]
+y_train, y_test = y[:16000], y[16000:]
 
 #create a dataset class
 class SelectDataset(Dataset):
@@ -314,3 +314,29 @@ ax.set_ylabel("Losses")
 legend = ax.legend(loc='upper right', shadow=True, fontsize='x-large')
 
 plt.show
+
+
+#RNN
+
+#Reshape the data to use for RNNs
+X_train, X_test = X_train.view(-1,2,11), X_test.view(-1, 2, 11)
+y_train, y_test = y_train.view(-1, 2), y_test.view(-1,2)
+
+batch_size = 10
+test = SelectDataset(X_test,y_test)
+train = SelectDataset(X_train, y_train)
+train_loader = DataLoader(train, batch_size = batch_size,shuffle = False)
+test_loader = DataLoader(test, batch_size = batch_size, shuffle = False)
+
+#building RNN
+
+
+
+
+
+
+
+
+
+
+
