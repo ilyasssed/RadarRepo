@@ -353,9 +353,9 @@ We can reach a loss of 0.008 for the test and the training losses, which is bett
 So our data was composed of information concerning Radar Trafic, and we tried to predict traffic volume using neural networks.  We tried different types of neural networks: (Deep Feeforward, Convolutional and Recurrent), and 2 types of losses: (The Mean Squared Error and the Huber loss). We could see that we got nearly the same results for the Deep Feedforward and the convolutional neural networks, but the convolutional neural networks used less epochs with the same ammount of data. The RNNs gave us better results, and took much less computing time. We could also see that for several times, we have got a testing loss that was lower than the training loss. This is maybe due to the nature of the train and the validation sets we havee choosen, because when we changed the test set, we have got different behavior. So, to sum up, it may be interessting to use the models with bigger datasets than the ones we have used and this will surelly give us bette models that generate better, and we can also have datasets that represent better the information we are trying to extract from the data.  
 
 ## References
-[1] https://medium.com/udacity-pytorch-challengers/a-brief-overview-of-loss-functions-in-pytorch-c0ddb78068f7
-[2] https://adventuresinmachinelearning.com/pytorch-tutorial-deep-learning/
-[3] https://adventuresinmachinelearning.com/convolutional-neural-networks-tutorial-in-pytorch/
-[4] https://www.deeplearningwizard.com/deep_learning/practical_pytorch/pytorch_recurrent_neuralnetwork/
+[1] https://medium.com/udacity-pytorch-challengers/a-brief-overview-of-loss-functions-in-pytorch-c0ddb78068f7   
+[2] https://adventuresinmachinelearning.com/pytorch-tutorial-deep-learning/   
+[3] https://adventuresinmachinelearning.com/convolutional-neural-networks-tutorial-in-pytorch/   
+[4] https://www.deeplearningwizard.com/deep_learning/practical_pytorch/pytorch_recurrent_neuralnetwork/   
 
 
