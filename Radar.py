@@ -418,7 +418,7 @@ for epoch in range(epochs):
 
 #Plot the results
     
-fig, ax = plt.subplots()
+fig, ax = plt.subplots(figsize = (10, 8))
 color = "tab:blue"
 ax.plot(range(len(train_losses_RNN)), train_losses_RNN, color = color, label = "train loss")
 
