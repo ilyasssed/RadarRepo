@@ -242,7 +242,7 @@ We can try and take a bigger validation set and see if this may affect our valid
 Now we will try to use recurrent neural networks, because they are a good method to predict time series.
 
 ## Recurrent Neural Network
-RNN are just FNN (Feedforward Neural Networks) that have a hidden layer that makes information flows from one FNN to the other. It allows time dependency between FNNs. So, in our RNN, we are going to use 2 time sequences. For each time sequence, we are going to introduce one X, which is 11 features. So, we are going to need to change the size of our input data, for that we create a dataset that for each line, takes 2 lines of our X.
+RNN are just FNN (Feedforward Neural Networks) that have a hidden layer that makes information flow from one FNN to the other. It allows time dependency between FNNs. So, in our RNN, we are going to use 2 time sequences. For each time sequence, we are going to introduce one X, which is 11 features. So, we are going to need to change the size of our input data, for that we create a dataset that for each line, takes 2 lines of our X.
 
 ```python
 X_train, X_test = X_train.view(-1, 2, 11), X_test.view(-1, 2, 11)
